@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 
 namespace OsmSharp.Osm.Data

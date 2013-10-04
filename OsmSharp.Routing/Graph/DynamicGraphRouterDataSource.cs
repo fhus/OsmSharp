@@ -7,6 +7,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math;
 using OsmSharp.Math.Structures.QTree;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -25,7 +26,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the index of vertices per bounding box.
         /// </summary>
-        private readonly ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
+        private readonly ILocatedObjectIndex<Coordinate, uint> _vertexIndex;
 
         /// <summary>
         /// Holds the tags index.
@@ -104,7 +105,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="box"></param>
         /// <returns></returns>
         public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(
-            GeoCoordinateBox box)
+            Envelope box)
         {
             // get all the vertices in the given box.
             IEnumerable<uint> vertices = _vertexIndex.GetInside(

@@ -22,10 +22,11 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Interpreter;
 using System.IO;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace OsmSharp.Osm.Data.Memory
 {
@@ -34,6 +35,11 @@ namespace OsmSharp.Osm.Data.Memory
     /// </summary>
     public class MemoryDataSource : DataSourceReadOnlyBase
     {
+        /// <summary>
+        /// Holds the geometry factory.
+        /// </summary>
+        private IGeometryFactory _geometryFactory;
+
         /// <summary>
         /// Creates a new memory data structure using the default geometry interpreter.
         /// </summary>
@@ -94,12 +100,12 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Holds the current bounding box.
         /// </summary>
-        private GeoCoordinateBox _box = null;
+        private Envelope _box = null;
 
         /// <summary>
         /// Returns the bounding box around all nodes.
         /// </summary>
-        public override GeoCoordinateBox BoundingBox
+        public override Envelope Envelope
         {
             get { return _box; }
         }
@@ -129,7 +135,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns true if there is a bounding box.
         /// </summary>
-        public override bool HasBoundinBox
+        public override bool HasEnvelope
         {
             get { return true; }
         }
@@ -215,12 +221,12 @@ namespace OsmSharp.Osm.Data.Memory
 
             if (_box == null)
             {
-                _box = new GeoCoordinateBox(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
-                    new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
+                _box = new Envelope(new Coordinate(node.Longitude.Value, node.Latitude.Value),
+                    new Coordinate(node.Longitude.Value, node.Latitude.Value));
             }
             else
             {
-                _box = _box + new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
+                _box.ExpandToInclude(new Coordinate(node.Longitude.Value, node.Latitude.Value));
             }
         }
 
@@ -490,7 +496,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public override IList<OsmGeo> Get(IGeometry box, Filter filter)
         {
             List<OsmGeo> res = new List<OsmGeo>();
 
@@ -499,7 +505,7 @@ namespace OsmSharp.Osm.Data.Memory
             foreach (Node node in _nodes.Values)
             {
                 if ((filter == null || filter.Evaluate(node)) && 
-                    box.Contains(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value)))
+                    box.Contains(new Point(new Coordinate(node.Longitude.Value, node.Latitude.Value))))
                 {
                     res.Add(node);
                     ids.Add(node.Id.Value);

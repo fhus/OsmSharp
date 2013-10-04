@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Structures.StringTrees;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.GeoCoding.Memory
 {
-    internal class IndexHouseNumbers : StringTreeDictionary<GeoCoordinate>
+    internal class IndexHouseNumbers : StringTreeDictionary<Coordinate>
     {
 
     }

@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -78,17 +78,17 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the bounding box of this changeset.
         /// </summary>
-        public override GeoCoordinateBox BoundingBox
+        public override Envelope Envelope
         {
             get 
             {
                 if (this.Objects.Count > 0)
                 {
-                    GeoCoordinateBox box = this.Objects[0].BoundingBox;
+                    Envelope box = new Envelope(this.Objects[0].Envelope);
 
                     for (int idx = 1; idx < this.Objects.Count; idx++)
                     {
-                        box = box + this.Objects[idx].BoundingBox;
+                        box.ExpandToInclude(this.Objects[idx].Envelope);
                     }
 
                     return box;

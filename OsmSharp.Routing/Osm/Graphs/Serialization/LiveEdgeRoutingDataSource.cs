@@ -105,7 +105,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="box"></param>
         /// <returns></returns>
         public KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>[] GetArcs(
-            GeoCoordinateBox box)
+            Envelope box)
         {
             // load the missing tiles.
             this.LoadMissingTile(box);
@@ -337,7 +337,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// Loads all missing tiles.
         /// </summary>
         /// <param name="box"></param>
-        private void LoadMissingTile(GeoCoordinateBox box)
+        private void LoadMissingTile(Envelope box)
         {
             // creates a tile range.
             TileRange tileRange = TileRange.CreateAroundBoundingBox(box, _zoom);

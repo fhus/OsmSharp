@@ -56,7 +56,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// The bounding box to limit nodes if any.
         /// </summary>
-        private readonly GeoCoordinateBox _box;
+        private readonly Envelope _box;
 
         /// <summary>
         /// Holds the edge comparer.
@@ -118,7 +118,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraph<TEdgeData> dynamicGraph, IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, 
             ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations,
-            GeoCoordinateBox box)
+            Envelope box)
         {
             _dynamicGraph = dynamicGraph;
             _interpreter = interpreter;

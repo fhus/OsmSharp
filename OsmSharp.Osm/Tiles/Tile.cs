@@ -1,5 +1,7 @@
-﻿using OsmSharp.Math.Geo;
+﻿
 using OsmSharp.Units.Angle;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace OsmSharp.Osm.Tiles
 {
@@ -8,6 +10,11 @@ namespace OsmSharp.Osm.Tiles
     /// </summary>
     public class Tile
     {
+        /// <summary>
+        /// Holds the geometry factory.
+        /// </summary>
+        private GeometryFactory _geometryFactory;
+
         /// <summary>
         /// Creates a new tile from a given id.
         /// </summary>
@@ -86,7 +93,7 @@ namespace OsmSharp.Osm.Tiles
         /// <summary>
         /// Returns the top left corner.
         /// </summary>
-        public GeoCoordinate TopLeft
+        public Coordinate TopLeft
         {
             get
             {
@@ -95,14 +102,14 @@ namespace OsmSharp.Osm.Tiles
                 double longitude = (double)(((double)this.X / System.Math.Pow(2.0, (double)this.Zoom) * 360.0) - 180.0);
                 double latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
 
-                return new GeoCoordinate(latitude, longitude);
+                return new Coordinate(latitude, longitude);
             }
         }
 
         /// <summary>
         /// Returns the bottom right corner.
         /// </summary>
-        public GeoCoordinate BottomRight
+        public Coordinate BottomRight
         {
             get
             {
@@ -111,22 +118,22 @@ namespace OsmSharp.Osm.Tiles
                 double longitude = (double)(((this.X + 1) / System.Math.Pow(2.0, this.Zoom) * 360.0) - 180.0);
                 double latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
 
-                return new GeoCoordinate(latitude, longitude);
+                return new Coordinate(latitude, longitude);
             }
         }
 
         /// <summary>
         /// Returns the bounding box for this tile.
         /// </summary>
-        public GeoCoordinateBox Box
+        public IGeometry Box
         {
             get
             {
                 // calculate the tiles bounding box and set its properties.
-                GeoCoordinate topLeft = this.TopLeft;
-                GeoCoordinate bottomRight = this.BottomRight;
+                Coordinate topLeft = this.TopLeft;
+                Coordinate bottomRight = this.BottomRight;
 
-                return new GeoCoordinateBox(topLeft, bottomRight);
+                return _geometryFactory.CreateMultiPoint(new Coordinate[] { topLeft, bottomRight });
             }
         }
 
@@ -249,9 +256,9 @@ namespace OsmSharp.Osm.Tiles
         /// <param name="location"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
-        public static Tile CreateAroundLocation(GeoCoordinate location, int zoom)
+        public static Tile CreateAroundLocation(Coordinate location, int zoom)
         {
-            return Tile.CreateAroundLocation(location.Latitude, location.Longitude, zoom);
+            return Tile.CreateAroundLocation(location.Y, location.X, zoom);
         }
 
         /// <summary>

@@ -20,8 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.Data
 {
@@ -145,12 +145,12 @@ namespace OsmSharp.Osm.Data
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public abstract IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter);
+        public abstract IList<OsmGeo> Get(IGeometry box, Filter filter);
 
         /// <summary>
         /// Returns the boundingbox of the data in this datasource.
         /// </summary>
-        public abstract GeoCoordinateBox BoundingBox
+        public abstract Envelope Envelope
         {
             get;
         }
@@ -166,7 +166,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns true if this datasource has a boundingbox.
         /// </summary>
-        public abstract bool HasBoundinBox
+        public abstract bool HasEnvelope
         {
             get;
         }

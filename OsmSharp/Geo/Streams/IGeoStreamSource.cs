@@ -17,14 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Geo.Geometries.Streams
 {
     /// <summary>
     /// Represents a source of geometry objects.
     /// </summary>
-    public interface IGeoStreamSource : IEnumerator<Geometry>, IEnumerable<Geometry>
+    public interface IGeoStreamSource : IEnumerator<IGeometry>, IEnumerable<IGeometry>
     {
         /// <summary>
         /// Intializes this source.
@@ -57,6 +57,6 @@ namespace OsmSharp.Geo.Geometries.Streams
         /// Returns the bounds of this source.
         /// </summary>
         /// <returns></returns>
-        GeoCoordinateBox GetBounds();
+        IGeometry GetBoundary();
     }
 }

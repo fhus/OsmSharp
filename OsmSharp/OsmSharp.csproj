@@ -120,6 +120,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotSpatial.Projections">
+      <HintPath>..\packages\DotSpatial.Projections.1.5.1\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\packages\GeoAPI.1.7.1.1\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerCollections">
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\PowerCollections.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.640\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -170,17 +182,13 @@
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
     <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
-    <Compile Include="Geo\Geometries\Geometry.cs" />
-    <Compile Include="Geo\Geometries\GeometryCollection.cs" />
-    <Compile Include="Geo\Geometries\LineairRing.cs" />
-    <Compile Include="Geo\Geometries\LineString.cs" />
-    <Compile Include="Geo\Geometries\MultiLineString.cs" />
-    <Compile Include="Geo\Geometries\MultiPoint.cs" />
-    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
-    <Compile Include="Geo\Geometries\Point.cs" />
-    <Compile Include="Geo\Geometries\Polygon.cs" />
-    <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
-    <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
@@ -223,26 +231,6 @@
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Geo\Extensions.cs" />
-    <Compile Include="Geo\GeoCoordinate.cs" />
-    <Compile Include="Geo\GeoCoordinateBox.cs" />
-    <Compile Include="Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
-    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\DirectionEnum.cs" />
-    <Compile Include="Geo\Meta\RelativeDirection.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Geo\Projections\ScaledProjection.cs" />
-    <Compile Include="Geo\Projections\WebMercator.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />
@@ -429,9 +417,6 @@
     <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
-    <Compile Include="Geo\Projections\IProjection.cs" />
-    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
-    <Compile Include="Geo\Projections\SphericalMercator.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Primitives\BoxF2D.cs" />
     <Compile Include="Math\Primitives\RectangleF2D.cs" />

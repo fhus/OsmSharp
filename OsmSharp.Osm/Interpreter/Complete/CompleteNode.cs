@@ -22,9 +22,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Cache;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -65,7 +65,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The coordinates of this node.
         /// </summary>
-        public GeoCoordinate Coordinate { get; set; }
+        public Coordinate Coordinate { get; set; }
 
         /// <summary>
         /// Converts this node to it's simple counterpart.
@@ -76,8 +76,8 @@ namespace OsmSharp.Osm
             Node simple_node = new Node();
             simple_node.Id = this.Id;
             simple_node.ChangeSetId = this.ChangeSetId;
-            simple_node.Latitude = this.Coordinate.Latitude;
-            simple_node.Longitude = this.Coordinate.Longitude;
+            simple_node.Latitude = this.Coordinate.Y;
+            simple_node.Longitude = this.Coordinate.X;
             simple_node.Tags = this.Tags;
             simple_node.TimeStamp = this.TimeStamp;
             simple_node.UserId = this.UserId;
@@ -115,8 +115,8 @@ namespace OsmSharp.Osm
             {
                 return String.Format("http://www.openstreetmap.org/?node={0}:[{1};{2}]",
                     this.Id,
-                    this.Coordinate.Longitude,
-                    this.Coordinate.Latitude);
+                    this.Coordinate.X,
+                    this.Coordinate.Y);
             }
             return String.Format("http://www.openstreetmap.org/?node={0}",
                 this.Id);
@@ -192,7 +192,7 @@ namespace OsmSharp.Osm
             CompleteNode node = CompleteNode.Create(simpleNode.Id.Value);
 
             node.ChangeSetId = simpleNode.ChangeSetId;
-            node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);
+            node.Coordinate = new Coordinate(simpleNode.Longitude.Value, simpleNode.Latitude.Value);
             if (simpleNode.Tags != null)
             {
                 foreach (Tag pair in simpleNode.Tags)
@@ -226,7 +226,7 @@ namespace OsmSharp.Osm
             CompleteNode node = CompleteNode.Create(table, simpleNode.Id.Value);
 
             node.ChangeSetId = simpleNode.ChangeSetId;
-            node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);
+            node.Coordinate = new Coordinate(simpleNode.Longitude.Value, simpleNode.Latitude.Value);
             if (simpleNode.Tags != null)
             {
                 foreach (Tag pair in simpleNode.Tags)

@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using GeoAPI.Geometries;
+
 namespace OsmSharp.Geo.Geometries.Streams
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace OsmSharp.Geo.Geometries.Streams
         /// Adds a new geometry.
         /// </summary>
         /// <param name="geometry"></param>
-        void AddGeometry(Geometry geometry);
+        void AddGeometry(IGeometry geometry);
 
         /// <summary>
         /// Closes this target.

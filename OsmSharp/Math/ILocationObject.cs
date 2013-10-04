@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Math
 {
@@ -14,7 +14,7 @@ namespace OsmSharp.Math
         /// <summary>
         /// Returns the location of this object.
         /// </summary>
-        GeoCoordinate Location
+        Coordinate Location
         {
             get;
         }

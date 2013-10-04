@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Structures.StringTrees;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.GeoCoding.Memory
 {
@@ -49,7 +49,7 @@ namespace OsmSharp.GeoCoding.Memory
         /// <param name="houseNumber"></param>
         /// <param name="value"></param>
         public void Add(string country, string postalCode, string commune, string street, 
-            string houseNumber, GeoCoordinate value)
+            string houseNumber, Coordinate value)
         {
             IndexCommunes communes = _index.SearchExact(postalCode);
             if (communes == null)

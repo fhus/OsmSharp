@@ -20,11 +20,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Geo.Geometries;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
+using NetTopologySuite.Geometries;
+using GeoAPI.Geometries;
 using OsmSharp.Geo.Attributes;
 
 namespace OsmSharp.Osm.Interpreter
@@ -35,6 +35,11 @@ namespace OsmSharp.Osm.Interpreter
     public class SimpleGeometryInterpreter : GeometryInterpreter
     {
         /// <summary>
+        /// Holds the geometry factory.
+        /// </summary>
+        private GeometryFactory _geometryFactory;
+
+        /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         /// <param name="osmObject"></param>
@@ -44,7 +49,7 @@ namespace OsmSharp.Osm.Interpreter
             // DISCLAIMER: this is a very very very simple geometry interpreter and
             // contains hardcoded all relevant tags.
 
-            GeometryCollection collection = new GeometryCollection();
+            List<IGeometry> collection = new List<IGeometry>();
             TagsCollection tags;
             if (osmObject != null)
             {
@@ -101,14 +106,14 @@ namespace OsmSharp.Osm.Interpreter
 
                         if (isArea)
                         { // area tags leads to simple polygon
-                            LineairRing lineairRing = new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
-                            lineairRing.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            LinearRing lineairRing = new LinearRing((osmObject as CompleteWay).GetCoordinates().ToArray<Coordinate>());
+                            lineairRing.UserData = new SimpleGeometryAttributeCollection(tags);
                             collection.Add(lineairRing);
                         }
                         else
                         { // no area tag leads to just a line.
-                            LineString lineString = new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
-                            lineString.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            LineString lineString = new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<Coordinate>());
+                            lineString.UserData = new SimpleGeometryAttributeCollection(tags);
                             collection.Add(lineString);
                         }
                         break;
@@ -121,7 +126,7 @@ namespace OsmSharp.Osm.Interpreter
                         { // there is a type in this relation.
                             if (typeValue == "multipolygon")
                             { // this relation is a multipolygon.
-                                Geometry geometry = this.InterpretMultipolygonRelation(relation);
+                                IGeometry geometry = this.InterpretMultipolygonRelation(relation);
                                 if (geometry != null)
                                 { // add the geometry.
                                     collection.Add(geometry);
@@ -135,7 +140,7 @@ namespace OsmSharp.Osm.Interpreter
                         break;
                 }
             }
-            return collection;
+            return new GeometryCollection(collection.ToArray());
         }
 
         /// <summary>
@@ -143,9 +148,9 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="relation"></param>
         /// <returns></returns>
-        private Geometry InterpretMultipolygonRelation(CompleteRelation relation)
+        private IGeometry InterpretMultipolygonRelation(CompleteRelation relation)
         {
-            Geometry geometry = null;
+            IGeometry geometry = null;
             if (relation.Members == null)
             { // the relation has no members.
                 return geometry;
@@ -173,7 +178,7 @@ namespace OsmSharp.Osm.Interpreter
             // loosely based on: http://wiki.openstreetmap.org/wiki/Relation:multipolygon/Algorithm
 
             // recusively try to assign the rings.
-            List<KeyValuePair<bool, LineairRing>> rings;
+            List<KeyValuePair<bool, ILinearRing>> rings;
             if (!this.AssignRings(ways, out rings))
             {
                 OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
@@ -184,7 +189,7 @@ namespace OsmSharp.Osm.Interpreter
             if (geometry != null)
             {
                 // assign attributes.
-                geometry.Attributes = new SimpleGeometryAttributeCollection(relation.Tags);
+                geometry.UserData = new SimpleGeometryAttributeCollection(relation.Tags);
             }
             return geometry;
         }
@@ -194,9 +199,9 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="rings"></param>
         /// <returns></returns>
-        private Geometry GroupRings(List<KeyValuePair<bool, LineairRing>> rings)
+        private IGeometry GroupRings(List<KeyValuePair<bool, ILinearRing>> rings)
         {
-            Geometry geometry = null;
+            IGeometry geometry = null;
             bool[][] containsFlags = new bool[rings.Count][]; // means [x] contains [y]
             for (int x = 0; x < rings.Count; x++)
             {
@@ -208,10 +213,10 @@ namespace OsmSharp.Osm.Interpreter
                 }
             }
             bool[] used = new bool[rings.Count];
-            MultiPolygon multiPolygon = null;
+            List<IPolygon> multiPolygonList = null;
             while (used.Contains(false))
             { // select a ring not contained by any other.
-                LineairRing outer = null;
+                ILinearRing outer = null;
                 int outerIdx = -1;
                 for (int idx = 0; idx < rings.Count; idx++)
                 {
@@ -230,7 +235,7 @@ namespace OsmSharp.Osm.Interpreter
                 }
                 if (outer != null)
                 { // an outer ring was found, find inner rings.
-                    List<LineairRing> inners = new List<LineairRing>();
+                    List<ILinearRing> inners = new List<ILinearRing>();
                     // select all rings contained by inner but not by any others.
                     for (int idx = 0; idx < rings.Count; idx++)
                     {
@@ -243,30 +248,24 @@ namespace OsmSharp.Osm.Interpreter
                     }
 
                     bool unused = !used.Contains(false);
-                    if (multiPolygon == null &&
+                    if (multiPolygonList == null &&
                         inners.Count == 0 &&
                         unused)
                     { // there is just one lineair ring.
                         geometry = outer;
                         break;
                     }
-                    else if (multiPolygon == null &&
+                    else if (multiPolygonList == null &&
                         unused)
                     { // there is just one polygon.
-                        Polygon polygon = new Polygon(
-                            outer, inners);
+                        IPolygon polygon = _geometryFactory.CreatePolygon(outer, inners.ToArray());
                         geometry = polygon;
                         break;
                     }
                     else
                     { // there have to be other polygons.
-                        {
-                            multiPolygon = new MultiPolygon();
-                            geometry = multiPolygon;
-                        }
-                        Polygon polygon = new Polygon(
-                            outer, inners);
-                        multiPolygon.Add(polygon);
+                        multiPolygonList.Add(_geometryFactory.CreatePolygon(outer, inners.ToArray()));
+                        geometry = _geometryFactory.CreateMultiPolygon(multiPolygonList.ToArray());
                     }
                 }
                 else
@@ -287,7 +286,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="used"></param>
         /// <param name="ringIdx"></param>
         /// <returns></returns>
-        private bool CheckUncontained(List<KeyValuePair<bool, LineairRing>> rings,
+        private bool CheckUncontained(List<KeyValuePair<bool, ILinearRing>> rings,
             bool[][] containsFlags, bool[] used, int ringIdx)
         {
             for (int idx = 0; idx < rings.Count; idx++)
@@ -307,7 +306,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="rings"></param>
         /// <returns></returns>
         private bool AssignRings(
-            List<KeyValuePair<bool, CompleteWay>> ways, out List<KeyValuePair<bool, LineairRing>> rings)
+            List<KeyValuePair<bool, CompleteWay>> ways, out List<KeyValuePair<bool, ILinearRing>> rings)
         {
             return this.AssignRings(ways, new bool[ways.Count], out rings);
         }
@@ -320,7 +319,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="rings"></param>
         /// <returns></returns>
         private bool AssignRings(
-            List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, out List<KeyValuePair<bool, LineairRing>> rings)
+            List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, out List<KeyValuePair<bool, ILinearRing>> rings)
         {
             bool assigned = false;
             for (int idx = 0; idx < ways.Count; idx++)
@@ -328,20 +327,20 @@ namespace OsmSharp.Osm.Interpreter
                 if (!assignedFlags[idx])
                 {
                     assigned = true;
-                    LineairRing ring;
+                    ILinearRing ring;
                     if (this.AssignRing(ways, idx, assignedFlags, out ring))
                     { // assigning the ring successed.
-                        List<KeyValuePair<bool, LineairRing>> otherRings;
+                        List<KeyValuePair<bool, ILinearRing>> otherRings;
                         if (this.AssignRings(ways, assignedFlags, out otherRings))
                         { // assigning the rings succeeded.
                             rings = otherRings;
-                            rings.Add(new KeyValuePair<bool, LineairRing>(ways[idx].Key, ring));
+                            rings.Add(new KeyValuePair<bool, ILinearRing>(ways[idx].Key, ring));
                             return true;
                         }
                     }
                 }
             }
-            rings = new List<KeyValuePair<bool,LineairRing>>();
+            rings = new List<KeyValuePair<bool, ILinearRing>>();
             return !assigned;
         }
 
@@ -353,9 +352,9 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="assignedFlags"></param>
         /// <param name="ring"></param>
         /// <returns></returns>
-        private bool AssignRing(List<KeyValuePair<bool, CompleteWay>> ways, int way, bool[] assignedFlags, out LineairRing ring)
+        private bool AssignRing(List<KeyValuePair<bool, CompleteWay>> ways, int way, bool[] assignedFlags, out ILinearRing ring)
         {
-            List<GeoCoordinate> coordinates = null;
+            List<Coordinate> coordinates = null;
             assignedFlags[way] = true;
             if (ways[way].Value.IsClosed())
             { // the was is closed.
@@ -370,7 +369,7 @@ namespace OsmSharp.Osm.Interpreter
                 List<CompleteNode> nodes = new List<CompleteNode>(ways[way].Value.Nodes);
                 if (this.CompleteRing(ways, assignedFlags, nodes, roleFlag))
                 { // the ring was completed!
-                    coordinates = new List<GeoCoordinate>(nodes.Count);
+                    coordinates = new List<Coordinate>(nodes.Count);
                     foreach (CompleteNode node in nodes)
                     {
                         coordinates.Add(node.Coordinate);
@@ -383,7 +382,7 @@ namespace OsmSharp.Osm.Interpreter
                     return false;
                 }
             }
-            ring = new LineairRing(coordinates);
+            ring = _geometryFactory.CreateLinearRing(coordinates.ToArray());
             return true;
         }
 

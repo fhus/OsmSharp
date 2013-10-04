@@ -17,8 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Math.Geo;
 using OsmSharp.Units.Angle;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.Tiles
 {
@@ -106,19 +106,19 @@ namespace OsmSharp.Osm.Tiles
         /// <param name="box"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
-        public static TileRange CreateAroundBoundingBox(GeoCoordinateBox box, int zoom)
+        public static TileRange CreateAroundBoundingBox(Envelope box, int zoom)
         {
             int n = (int)System.Math.Floor(System.Math.Pow(2, zoom));
 
-            Radian rad = new Degree(box.MaxLat);
+            Radian rad = new Degree(box.MaxY);
 
-            int x_tile_min = (int)(((box.MinLon + 180.0f) / 360.0f) * (double)n);
+            int x_tile_min = (int)(((box.MinX + 180.0f) / 360.0f) * (double)n);
             int y_tile_min = (int)(
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
                 / System.Math.PI) / 2f * (double)n);
 
-            rad = new Degree(box.MinLat);
-            int x_tile_max = (int)(((box.MaxLon + 180.0f) / 360.0f) * (double)n);
+            rad = new Degree(box.MinY);
+            int x_tile_max = (int)(((box.MaxX + 180.0f) / 360.0f) * (double)n);
             int y_tile_max = (int)(
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
                 / System.Math.PI) / 2f * (double)n);

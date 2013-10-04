@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Units.Angle;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Math.Geo.Meta
 {
@@ -35,22 +36,19 @@ namespace OsmSharp.Math.Geo.Meta
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static DirectionEnum Calculate(GeoCoordinate from, GeoCoordinate to)
+        public static DirectionEnum Calculate(Coordinate from, Coordinate to)
         {
             double offset = 0.01;
 
             // calculate the angle with the horizontal and vertical axes.
-            //GeoCoordinate horizonal_from = new GeoCoordinate(from.Latitude, from.Longitude + offset);
-            GeoCoordinate vertical_from = new GeoCoordinate(from.Latitude + offset, from.Longitude);
-
-            // create line.
-            GeoCoordinateLine line = new GeoCoordinateLine(from, to);
-            GeoCoordinateLine vertical_line = new GeoCoordinateLine(from,vertical_from);
-            //GeoCoordinateLine horizontal_line= new GeoCoordinateLine(from,horizonal_from);
+            Coordinate from_vertical = new Coordinate(from.X, from.Y + offset);
 
             // calculate angle.
-            //Degree horizontal_angle = line.Direction.Angle(horizontal_line.Direction);
-            Degree vertical_angle = line.Direction.Angle(vertical_line.Direction);
+            Degree vertical_angle = (Radian)NetTopologySuite.Algorithm.AngleUtility.AngleBetweenOriented(from_vertical, from, to);
+            if (vertical_angle.Value < 0)
+            {
+                vertical_angle = 360 - vertical_angle.Value;
+            }
 
             if (vertical_angle < new Degree(22.5)
                 || vertical_angle >= new Degree(360- 22.5))

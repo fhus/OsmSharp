@@ -1355,7 +1355,7 @@ namespace OsmSharp.Routing.CH
         {
             double searchBoxSize = delta;
             // build the search box.
-            var searchBox = new GeoCoordinateBox(new GeoCoordinate(
+            var searchBox = new Envelope(new GeoCoordinate(
                 coordinate.Latitude - searchBoxSize, coordinate.Longitude - searchBoxSize),
                                                                new GeoCoordinate(
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));

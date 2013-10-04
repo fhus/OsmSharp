@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
-        protected GeoCoordinateBox CalculateBox(MaxTimeProblem problem, IRoute route)
+        protected Envelope CalculateBox(MaxTimeProblem problem, IRoute route)
         {
             HashSet<GeoCoordinate> coordinates = new HashSet<GeoCoordinate>();
             foreach (int customer in route)
@@ -133,7 +133,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
             {
                 return null;
             }
-            return new GeoCoordinateBox(coordinates.ToArray());
+            return new Envelope(coordinates.ToArray());
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <returns></returns>
         protected bool Overlaps(MaxTimeProblem problem, IRoute route1, IRoute route2)
         {
-            GeoCoordinateBox route1_box = this.CalculateBox(problem, route1);
-            GeoCoordinateBox route2_box = this.CalculateBox(problem, route2);
+            Envelope route1_box = this.CalculateBox(problem, route1);
+            Envelope route2_box = this.CalculateBox(problem, route2);
             if (route1_box != null && route2_box != null)
             {
                 return route1_box.Overlaps(route2_box);

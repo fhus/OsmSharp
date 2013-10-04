@@ -29,7 +29,7 @@ using OsmSharp.Xml.Sources;
 using OsmSharp.Osm.Xml;
 using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Math.Geo;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.API
 {
@@ -273,14 +273,14 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public List<OsmGeo> BoundingBoxGet(GeoCoordinateBox box)
+        public List<OsmGeo> BoundingBoxGet(Envelope box)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/map?bbox={0},{1},{2},{3}", 
-                    box.MinLon.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                    box.MinLat.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                    box.MaxLon.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                    box.MaxLat.ToString(System.Globalization.CultureInfo.InvariantCulture)), Method.GET, null);
+                    box.MinX.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    box.MinY.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    box.MaxX.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    box.MaxY.ToString(System.Globalization.CultureInfo.InvariantCulture)), Method.GET, null);
 
             if (response != null && response.Trim().Length > 0)
             {

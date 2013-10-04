@@ -77,7 +77,7 @@
 //        /// </summary>
 //        /// <param name="box"></param>
 //        /// <returns></returns>
-//        public KeyValuePair<uint, KeyValuePair<uint, LiveEdge>>[] GetArcs(GeoCoordinateBox box)
+//        public KeyValuePair<uint, KeyValuePair<uint, LiveEdge>>[] GetArcs(Envelope box)
 //        {
 //            // load if needed.
 //            this.LoadMissingIfNeeded(box);
@@ -205,7 +205,7 @@
 //        /// Loads missing tiles for the bounding box if needed.
 //        /// </summary>
 //        /// <param name="box"></param>
-//        private void LoadMissingIfNeeded(GeoCoordinateBox box)
+//        private void LoadMissingIfNeeded(Envelope box)
 //        {
 //            // calculate the tile range.
 //            TileRange tileRange = TileRange.CreateAroundBoundingBox(box, _zoom);
@@ -230,7 +230,7 @@
 //        private void LoadTile(Tile tile)
 //        {
 //            // load data.
-//            GeoCoordinateBox box = tile.Box.Resize(0.00001);
+//            Envelope box = tile.Box.Resize(0.00001);
 //            IList<OsmGeo> data = _source.Get(box, OsmSharp.Osm.Filters.Filter.Any());
 
 //            // process the list of data just loaded.

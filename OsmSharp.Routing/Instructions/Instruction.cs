@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Routing.Instructions
 {
@@ -33,7 +34,7 @@ namespace OsmSharp.Routing.Instructions
         /// Creates a new instruction with only a location.
         /// </summary>
         /// <param name="location"></param>
-        public Instruction(GeoCoordinateBox location)
+        public Instruction(Envelope location)
         {
             this.Location = location;
         }
@@ -43,7 +44,7 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="location"></param>
         /// <param name="pois"></param>
-        public Instruction(GeoCoordinateBox location, List<PointPoi> pois)
+        public Instruction(Envelope location, List<PointPoi> pois)
         {
             this.Location = location;
             this.Pois = pois;
@@ -57,7 +58,7 @@ namespace OsmSharp.Routing.Instructions
         /// <summary>
         /// The location of this instruction.
         /// </summary>
-        public GeoCoordinateBox Location { get; private set; }
+        public Envelope Location { get; private set; }
 
         /// <summary>
         /// The instruction text.

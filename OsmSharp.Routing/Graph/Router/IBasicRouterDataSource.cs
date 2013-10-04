@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Routing.Graph.Router
 {
@@ -42,7 +43,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(GeoCoordinateBox box);
+        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(Envelope box);
 
         /// <summary>
         /// Returns the tags index.

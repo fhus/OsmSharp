@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Sources;
 using System.Globalization;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.Xml.v0_6
 {
@@ -41,13 +41,13 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="bounds"></param>
         /// <returns></returns>
-        public static GeoCoordinateBox ConvertFrom(this bounds bounds)
+        public static IGeometry ConvertFrom(this bounds bounds, IGeometryFactory geometryFactory)
         {
             if (bounds != null)
             {
-                return new GeoCoordinateBox(
-                    new GeoCoordinate((double)bounds.maxlat, (double)bounds.maxlon),
-                    new GeoCoordinate((double)bounds.minlat, (double)bounds.minlon));
+                return geometryFactory.CreateMultiPoint(new Coordinate[] {
+                    new Coordinate((double)bounds.maxlon, (double)bounds.maxlat),
+                    new Coordinate((double)bounds.minlon, (double)bounds.minlat) });
             }
             return null;
         }
@@ -57,16 +57,14 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="bound"></param>
         /// <returns></returns>
-        public static GeoCoordinateBox ConvertFrom(this bound bound)
+        public static IGeometry ConvertFrom(this bound bound, IGeometryFactory geometryFactory)
         {
             if (bound != null)
             {
                 string[] bounds = bound.box.Split(',');
-                return new GeoCoordinateBox(
-                    new GeoCoordinate(double.Parse(bounds[0], CultureInfo.InvariantCulture),
-                        double.Parse(bounds[1], CultureInfo.InvariantCulture)),
-                    new GeoCoordinate(double.Parse(bounds[2], CultureInfo.InvariantCulture),
-                        double.Parse(bounds[3], CultureInfo.InvariantCulture)));
+                return geometryFactory.CreateMultiPoint(new Coordinate[] {
+                    new Coordinate(double.Parse(bounds[1], CultureInfo.InvariantCulture), double.Parse(bounds[0], CultureInfo.InvariantCulture)),
+                    new Coordinate(double.Parse(bounds[3], CultureInfo.InvariantCulture), double.Parse(bounds[2], CultureInfo.InvariantCulture)) });
             }
             return null;
         }
@@ -265,17 +263,17 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public static bounds ConvertTo(this GeoCoordinateBox box)
+        public static bounds ConvertTo(this Envelope box)
         {
             bounds b = new bounds();
 
-            b.maxlat = box.MaxLat;
+            b.maxlat = box.MaxY;
             b.maxlatSpecified = true;
-            b.maxlon = box.MaxLon;
+            b.maxlon = box.MaxX;
             b.maxlonSpecified = true;
-            b.minlat = box.MinLat;
+            b.minlat = box.MinY;
             b.minlatSpecified = true;
-            b.minlon = box.MinLon;
+            b.minlon = box.MinX;
             b.minlonSpecified = true;
 
             return b;

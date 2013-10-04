@@ -22,10 +22,10 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Data;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -142,9 +142,9 @@ namespace OsmSharp.Osm
         /// Returns all the coordinates in this way in the same order as the nodes.
         /// </summary>
         /// <returns></returns>
-        public IList<GeoCoordinate> GetCoordinates()
+        public IList<Coordinate> GetCoordinates()
         {
-            var coordinates = new List<GeoCoordinate>();
+            var coordinates = new List<Coordinate>();
 
             for (int idx = 0; idx < this.Members.Count; idx++)
             {

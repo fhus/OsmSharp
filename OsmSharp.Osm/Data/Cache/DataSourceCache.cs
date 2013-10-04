@@ -22,10 +22,10 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Units.Angle;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Collections.Cache;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.Data.Cache
 {
@@ -71,9 +71,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns the boundingbox.
         /// </summary>
-        public override GeoCoordinateBox BoundingBox
+        public override Envelope Envelope
         {
-            get { return _source.BoundingBox; }
+            get { return _source.Envelope; }
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns true if this datasource is bounded.
         /// </summary>
-        public override bool HasBoundinBox
+        public override bool HasEnvelope
         {
-            get { return _source.HasBoundinBox; }
+            get { return _source.HasEnvelope; }
         }
 
         /// <summary>
@@ -229,12 +229,12 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns all data in the given bounding box.
         /// </summary>
-        /// <param name="box"></param>
+        /// <param name="geometry"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public override IList<OsmGeo> Get(IGeometry geometry, Filter filter)
         {
-            IList<OsmGeo> objects = _source.Get(box, filter);
+            IList<OsmGeo> objects = _source.Get(geometry, filter);
             foreach (OsmGeo osmGeo in objects)
             {
                 switch(osmGeo.Type)

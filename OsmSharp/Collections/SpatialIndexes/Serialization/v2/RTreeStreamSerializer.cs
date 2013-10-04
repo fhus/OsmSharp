@@ -24,7 +24,6 @@ using OsmSharp.Math.Primitives;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using OsmSharp.Collections.Cache;
-using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
 {

@@ -324,9 +324,9 @@ namespace OsmSharp.Routing
         /// Returns the bounding box around this route.
         /// </summary>
         /// <returns></returns>
-        public GeoCoordinateBox GetBox()
+        public Envelope GetBox()
         {
-            return new GeoCoordinateBox(this.GetPoints().ToArray());
+            return new Envelope(this.GetPoints().ToArray());
         }
 
         #endregion

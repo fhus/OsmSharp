@@ -23,6 +23,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {
@@ -50,7 +51,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
             }
         }
 
-        internal void GenerateTurn(GeoCoordinateBox box,
+        internal void GenerateTurn(Envelope box,
             RelativeDirection direction, 
             int street_count_turn,
             int street_count_before_turn,
@@ -96,7 +97,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
             _instructions.Add(instruction);
         }
 
-        internal void GeneratePoi(GeoCoordinateBox box, 
+        internal void GeneratePoi(Envelope box, 
             List<PointPoi> list,
             RelativeDirection direction)
         {
@@ -132,7 +133,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
             }
         }
 
-        internal void GenerateImmidiateTurn(GeoCoordinateBox box,
+        internal void GenerateImmidiateTurn(Envelope box,
             TagsCollection before_name, RelativeDirection first_direction, int first_street_count_to,
             RelativeDirection second_direction, TagsCollection first_street_to, TagsCollection second_street_to, List<PointPoi> list)
         {
@@ -147,7 +148,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
             _instructions.Add(instruction);
         }
 
-        internal void GenerateRoundabout(GeoCoordinateBox box, int count, TagsCollection next_street)
+        internal void GenerateRoundabout(Envelope box, int count, TagsCollection next_street)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(box);

@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
+using NetTopologySuite.Geometries;
 
 namespace OsmSharp.Osm.Interpreter
 {

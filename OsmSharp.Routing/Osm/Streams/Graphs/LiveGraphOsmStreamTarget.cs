@@ -74,7 +74,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="box"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
-            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, GeoCoordinateBox box)
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, Envelope box)
             : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box)
         {
 
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations, 
-            GeoCoordinateBox box)
+            Envelope box)
             : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box)
         {
 //            _dynamicDataSource = dynamicGraph;

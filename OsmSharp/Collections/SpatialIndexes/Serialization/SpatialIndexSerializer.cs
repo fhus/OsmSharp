@@ -7,7 +7,6 @@ using System.Text;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Collections.Tags;
 using OsmSharp.IO;
-using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Collections.SpatialIndexes.Serialization
 {

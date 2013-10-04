@@ -22,7 +22,8 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Geometries.Streams;
-using OsmSharp.Math.Geo;
+using NetTopologySuite.Geometries;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Geo.Streams
 {
@@ -82,15 +83,15 @@ namespace OsmSharp.Geo.Streams
         /// Returns the bounds of this geometry source.
         /// </summary>
         /// <returns></returns>
-        public GeoCoordinateBox GetBounds()
+        public IGeometry GetBoundary()
         {
-            return this.GeometryCollection.Box;
+            return this.GeometryCollection.Boundary;
         }
 
         /// <summary>
         /// Returns the current geometry.
         /// </summary>
-        public Geometry Current
+        public IGeometry Current
         {
             get
             {
@@ -119,7 +120,7 @@ namespace OsmSharp.Geo.Streams
         /// <summary>
         /// Holds the current enumerator.
         /// </summary>
-        private IEnumerator<Geometry> _enumerator;
+        private IEnumerator<IGeometry> _enumerator;
 
         /// <summary>
         /// Move to the next item in the geometry collection.
@@ -147,7 +148,7 @@ namespace OsmSharp.Geo.Streams
         /// Returns a enumerator for this source.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Geometry> GetEnumerator()
+        public IEnumerator<IGeometry> GetEnumerator()
         {
             this.Initialize();
 

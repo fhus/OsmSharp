@@ -152,7 +152,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
             // construct the box indicating the location of the resulting find by this machine.
             GeoCoordinate point1 = latest_point.Location;
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            Envelope box = new Envelope(
                 new GeoCoordinate(point1.Latitude - 0.001f, point1.Longitude - 0.001f),
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 

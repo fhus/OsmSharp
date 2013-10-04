@@ -21,8 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Collections;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the bounding box for this object.
         /// </summary>
-        public abstract GeoCoordinateBox BoundingBox
+        public abstract Envelope Envelope
         {
             get;
         }

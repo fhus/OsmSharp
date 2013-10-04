@@ -76,7 +76,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         {
             double searchBoxSize = delta;
             // create the search box.
-            var searchBox = new GeoCoordinateBox(new GeoCoordinate(
+            var searchBox = new Envelope(new GeoCoordinate(
                 coordinate.Latitude - searchBoxSize, coordinate.Longitude - searchBoxSize),
                                                                new GeoCoordinate(
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));

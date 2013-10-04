@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 coordinates.Add(poi.Location);
             }
             coordinates.Add(pois_point.Location);
-            GeoCoordinateBox box = new GeoCoordinateBox(coordinates.ToArray());
+            Envelope box = new Envelope(coordinates.ToArray());
 
             // let the scentence planner generate the correct information.
             this.Planner.SentencePlanner.GeneratePoi(box, pois, direction);

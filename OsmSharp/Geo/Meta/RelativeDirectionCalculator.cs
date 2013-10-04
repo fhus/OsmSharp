@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Units.Angle;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Math.Geo.Meta
 {
@@ -35,7 +36,7 @@ namespace OsmSharp.Math.Geo.Meta
         /// <param name="along"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static RelativeDirection Calculate(GeoCoordinate from, GeoCoordinate along, GeoCoordinate to)
+        public static RelativeDirection Calculate(Coordinate from, Coordinate along, Coordinate to)
         {
             RelativeDirection direction = new RelativeDirection();
 
@@ -43,10 +44,11 @@ namespace OsmSharp.Math.Geo.Meta
             double straight_on = 10;
             double turn_back = 5;
 
-            GeoCoordinateLine line_from = new GeoCoordinateLine(from, along);
-            GeoCoordinateLine line_to = new GeoCoordinateLine(along, to);
-
-            Degree angle = line_from.Direction.Angle(line_to.Direction);
+            Degree angle = (Radian)NetTopologySuite.Algorithm.AngleUtility.AngleBetweenOriented(from, along, to);
+            if (angle.Value < 0)
+            {
+                angle = 360 - angle.Value;
+            }
 
             if (angle >= new Degree(360 - straight_on)
                 || angle < new Degree(straight_on))

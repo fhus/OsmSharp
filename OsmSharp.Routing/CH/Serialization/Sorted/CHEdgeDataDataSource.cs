@@ -97,7 +97,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="box"></param>
         /// <returns></returns>
         public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetArcs(
-            GeoCoordinateBox box)
+            Envelope box)
         {
             List<uint> vertices = this.LoadVerticesIn(box);
             KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs =
@@ -246,7 +246,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        private List<uint> LoadVerticesIn(GeoCoordinateBox box)
+        private List<uint> LoadVerticesIn(Envelope box)
         {
             List<uint> vertices = new List<uint>();
             TileRange range = TileRange.CreateAroundBoundingBox(box, _zoom);

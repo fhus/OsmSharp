@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Collections.LongIndex.LongIndex;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace OsmSharp.Osm.Data.Streams.Filters
 {
@@ -42,7 +43,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// <summary>
         /// The box to filter against.
         /// </summary>
-        private readonly GeoCoordinateBox _box;
+        private readonly IGeometry _box;
 
         /// <summary>
         /// An index of the actual nodes inside the bounding box.
@@ -82,7 +83,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// Creates a new bounding box filter.
         /// </summary>
         /// <param name="box"></param>
-        public OsmStreamFilterBoundingBox(GeoCoordinateBox box)
+        public OsmStreamFilterBoundingBox(IGeometry box)
             : base()
         {
             _box = box;
@@ -274,9 +275,9 @@ namespace OsmSharp.Osm.Data.Streams.Filters
             switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    isIn = _box.Contains(new GeoCoordinate(
-                        (osmGeo as Node).Latitude.Value,
-                        (osmGeo as Node).Longitude.Value));
+                    isIn = _box.Contains(new Point((new Coordinate(
+                        (osmGeo as Node).Longitude.Value,
+                        (osmGeo as Node).Latitude.Value))));
                     break;
                 case OsmGeoType.Way:
                     foreach (long nodeId in (osmGeo as Way).Nodes)

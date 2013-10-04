@@ -18,8 +18,9 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Geo.Geometries;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Interpreter;
+using NetTopologySuite.Geometries;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -103,11 +104,11 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The bounding box of object.
         /// </summary>
-        public override GeoCoordinateBox BoundingBox
+        public override Envelope Envelope
         {
             get
             {
-                return this.Geometries.Box;
+                return this.Geometries.EnvelopeInternal;
             }
         }
 

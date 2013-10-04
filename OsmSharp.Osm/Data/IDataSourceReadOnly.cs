@@ -21,8 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
+using GeoAPI.Geometries;
 
 namespace OsmSharp.Osm.Data
 {
@@ -34,7 +34,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns the bounding box of the data in this source if possible.
         /// </summary>
-        GeoCoordinateBox BoundingBox { get; }
+        Envelope Envelope { get; }
 
         /// <summary>
         /// The unique id for this datasource.
@@ -46,7 +46,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns true if this datasource is bounded.
         /// </summary>
-        bool HasBoundinBox { get; }
+        bool HasEnvelope { get; }
 
         /// <summary>
         /// Returns true if this datasource is readonly.
@@ -143,10 +143,10 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns all the objects in this dataset that evaluate the filter to true.
         /// </summary>
-        /// <param name="box"></param>
+        /// <param name="geometry"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter);
+        IList<OsmGeo> Get(IGeometry geometry, Filter filter);
 
         #endregion
 
